@@ -1,6 +1,7 @@
 package dsg
 
 import (
+	"io"
 	"net/url"
 	"path/filepath"
 	"strings"
@@ -38,14 +39,17 @@ func Load(url string) error {
 		return err
 	}
 
-	d = New()
+	LoadReader(reader)
+	return nil
+}
 
+func LoadReader(reader io.Reader) {
+	d = New()
 	d.l.Lock()
 	defer d.l.Unlock()
 
 	d.Patterns = parser.ToPatterns(reader)
 	d.Index = parser.ToIndexMap(d.Patterns)
-	return nil
 }
 
 func (l DSG) Exist(pattern string) bool {
