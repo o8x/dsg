@@ -47,6 +47,7 @@ func main() {
 产物位于 dsg/dsg.go，文件结构类似 [dsg.go](dsg.go)
 
 ```shell
+go get -d github.com/o8x/dsg/cmd/generator
 go run github.com/o8x/dsg/cmd/generator -url https://example.com/rules.text
 ```
 
