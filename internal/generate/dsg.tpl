@@ -3,8 +3,6 @@ package dsg
 // Code generated DO NOT EDIT
 
 import (
-	"crypto/sha1"
-	"fmt"
 	"net/url"
 	"path/filepath"
 	"regexp"
@@ -46,7 +44,7 @@ func (l DSG) Exist(pattern string) bool {
 		}
 	}
 
-	_, ok := l.Index[utils.Sha1Sum(pattern)]
+	_, ok := l.Index[pattern]
 	return ok
 }
 
@@ -96,9 +94,4 @@ func (l DSG) Match(s string) (*pattern.Pattern, bool) {
 	}
 
 	return nil, false
-}
-
-func Sha1Sum(str string) string {
-	sum := sha1.Sum([]byte(str))
-	return fmt.Sprintf("%x", sum)
 }

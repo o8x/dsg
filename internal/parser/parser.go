@@ -8,7 +8,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/o8x/dsg/internal/utils"
 	"github.com/o8x/dsg/pattern"
 )
 
@@ -133,7 +132,7 @@ func ToIndex(patterns []*pattern.Pattern) []*Index {
 			!it.WildcardMatch && !it.PrefixMatch && !it.SuffixMatch && !it.HTTP {
 
 			res = append(res, &Index{
-				Hash:    utils.Sha1Sum(it.Pattern),
+				Hash:    it.Pattern,
 				Index:   i,
 				Pattern: it,
 			})

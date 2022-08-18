@@ -9,7 +9,6 @@ import (
 
 	"github.com/o8x/dsg/internal/downloader"
 	"github.com/o8x/dsg/internal/parser"
-	"github.com/o8x/dsg/internal/utils"
 	"github.com/o8x/dsg/pattern"
 )
 
@@ -62,7 +61,7 @@ func (l DSG) Exist(pattern string) bool {
 		}
 	}
 
-	_, ok := l.Index[utils.Sha1Sum(pattern)]
+	_, ok := l.Index[pattern]
 	return ok
 }
 
