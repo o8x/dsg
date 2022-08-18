@@ -53,6 +53,7 @@ func ToList(reader io.Reader) []string {
 
 func ToPatterns(reader io.Reader) []*pattern.Pattern {
 	var list []*pattern.Pattern
+	set := map[string]interface{}{}
 	for _, it := range ToList(reader) {
 		if strings.HasPrefix(it, "@@") {
 			continue
@@ -110,6 +111,12 @@ func ToPatterns(reader io.Reader) []*pattern.Pattern {
 			it = strings.TrimLeft(it, "https://")
 		}
 
+		// 忽略同名
+		if _, ok := set[it]; ok {
+			continue
+		}
+
+		set[it] = nil
 		p.Pattern = it
 		list = append(list, p)
 	}
@@ -122,7 +129,8 @@ func ToIndex(patterns []*pattern.Pattern) []*Index {
 	for i, it := range patterns {
 		// 没有任何规则的 pattern，生成 hash index 用于全匹配
 		if it.RegMatch == nil &&
-			!it.WildcardMatch && !it.PrefixMatch && !it.SuffixMatch && !it.ProtoMatch && !it.HTTP {
+			// ProtoMatch 剥离掉协议之后可以做全匹配
+			!it.WildcardMatch && !it.PrefixMatch && !it.SuffixMatch && !it.HTTP {
 
 			res = append(res, &Index{
 				Hash:    utils.Sha1Sum(it.Pattern),

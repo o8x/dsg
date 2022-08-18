@@ -56,7 +56,7 @@ func Template(reader io.Reader) string {
 	for _, ind := range parser.ToIndex(patterns) {
 		builder := strings.Builder{}
 		builder.WriteString("\t\t\t")
-		builder.WriteString(fmt.Sprintf("// %s", ind.Pattern.Pattern))
+		builder.WriteString(fmt.Sprintf("// %s", ind.Pattern.Origin))
 		builder.WriteString("\n")
 		builder.WriteString("\t\t\t")
 		builder.WriteString(fmt.Sprintf(`"%s": %d`, ind.Hash, ind.Index))

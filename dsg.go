@@ -56,6 +56,12 @@ func (l DSG) Exist(pattern string) bool {
 	l.l.Lock()
 	defer l.l.Unlock()
 
+	if strings.Contains(pattern, "://") {
+		if seg := strings.Split(pattern, "://"); len(seg) > 1 {
+			pattern = seg[1]
+		}
+	}
+
 	_, ok := l.Index[utils.Sha1Sum(pattern)]
 	return ok
 }
@@ -82,7 +88,8 @@ func (l DSG) Match(s string) (*pattern.Pattern, bool) {
 
 	for _, it := range l.Patterns {
 		// 暂时不处理正则和忽略
-		if it.Exclude || it.RegMatch != nil {
+		// 协议匹配已经改为由索引处理
+		if it.Exclude || it.ProtoMatch || it.RegMatch != nil {
 			continue
 		}
 

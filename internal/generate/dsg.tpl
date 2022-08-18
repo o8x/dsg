@@ -40,7 +40,13 @@ func (l DSG) Exist(pattern string) bool {
 	l.l.Lock()
 	defer l.l.Unlock()
 
-	_, ok := l.Index[Sha1Sum(pattern)]
+	if strings.Contains(pattern, "://") {
+		if seg := strings.Split(pattern, "://"); len(seg) > 1 {
+			pattern = seg[1]
+		}
+	}
+
+	_, ok := l.Index[utils.Sha1Sum(pattern)]
 	return ok
 }
 
