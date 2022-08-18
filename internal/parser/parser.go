@@ -2,6 +2,7 @@ package parser
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"net/url"
 	"regexp"
@@ -64,6 +65,13 @@ func ToPatterns(reader io.Reader) []*pattern.Pattern {
 			p.WildcardMatch = true
 		}
 
+		// 点开头是通配符匹配
+		if strings.HasPrefix(it, ".") {
+			p.WildcardMatch = true
+			// .google.com -> *.google.com
+			it = fmt.Sprintf("*%s", it)
+		}
+
 		if strings.HasPrefix(it, `/`) {
 			reg, err := regexp.Compile(it)
 			if err != nil {
@@ -81,12 +89,6 @@ func ToPatterns(reader io.Reader) []*pattern.Pattern {
 		if !p.ProtoMatch && strings.HasPrefix(it, `|`) {
 			p.PrefixMatch = true
 			it = strings.TrimLeft(it, "|")
-		}
-
-		// 点开头是通配符匹配，也认为是前缀匹配
-		if strings.HasPrefix(it, ".") {
-			p.PrefixMatch = true
-			it = strings.TrimLeft(it, ".")
 		}
 
 		if strings.HasSuffix(it, "|") {
