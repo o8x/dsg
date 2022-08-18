@@ -23,6 +23,11 @@ func Template(reader io.Reader) string {
 
 	patterns := parser.ToPatterns(reader)
 	for i, it := range patterns {
+		// 加入索引的数据不进行生成
+		if parser.HasIndex(it) {
+			continue
+		}
+
 		regName := "nil"
 		if it.RegMatch != nil {
 			regName = fmt.Sprintf("reg%d", i)

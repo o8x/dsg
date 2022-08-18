@@ -123,17 +123,21 @@ func ToPatterns(reader io.Reader) []*pattern.Pattern {
 	return list
 }
 
+func HasIndex(it *pattern.Pattern) bool {
+	// 没有任何规则的 pattern，生成 hash index 用于全匹配
+	return it.RegMatch == nil &&
+		// ProtoMatch 剥离掉协议之后可以做全匹配
+		!it.WildcardMatch && !it.PrefixMatch && !it.SuffixMatch && !it.HTTP
+}
+
 func ToIndex(patterns []*pattern.Pattern) []*Index {
 	var res []*Index
-	for i, it := range patterns {
-		// 没有任何规则的 pattern，生成 hash index 用于全匹配
-		if it.RegMatch == nil &&
-			// ProtoMatch 剥离掉协议之后可以做全匹配
-			!it.WildcardMatch && !it.PrefixMatch && !it.SuffixMatch && !it.HTTP {
-
+	for _, it := range patterns {
+		if HasIndex(it) {
 			res = append(res, &Index{
-				Hash:    it.Pattern,
-				Index:   i,
+				Hash: it.Pattern,
+				// 暂时用不着
+				Index:   0,
 				Pattern: it,
 			})
 		}
