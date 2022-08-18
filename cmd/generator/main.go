@@ -3,6 +3,7 @@ package main
 import (
 	_ "embed"
 	"flag"
+	"fmt"
 	"os"
 
 	"github.com/o8x/dsg/internal/downloader"
@@ -11,16 +12,26 @@ import (
 
 var (
 	filtersUrl *string
+	usage      = `Usage:
+  generate -url https://xxx
+
+Use go run:
+  go get -d github.com/o8x/dsg
+  go run github.com/o8x/dsg/cmd/generator -url https://xxx
+`
 )
 
 func init() {
-	filtersUrl = flag.String("url", "",
-		`go run github.com/o8x/dsg/cmd/generator -url https-link`,
-	)
+	filtersUrl = flag.String("url", "", usage)
 	flag.Parse()
 }
 
 func main() {
+	if *filtersUrl == "" {
+		fmt.Print(usage)
+		return
+	}
+
 	reader, err := downloader.DownAsReader(*filtersUrl)
 	if err != nil {
 		panic(err)
