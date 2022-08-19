@@ -86,6 +86,12 @@ func ToPatterns(reader io.Reader) []*pattern.Pattern {
 			it = strings.TrimLeft(it, "||")
 		}
 
+		// 自定义规则
+		if strings.HasPrefix(it, `++`) {
+			p.Custom = true
+			it = strings.TrimLeft(it, "++")
+		}
+
 		if !p.ProtoMatch && strings.HasPrefix(it, `|`) {
 			p.PrefixMatch = true
 			it = strings.TrimLeft(it, "|")
@@ -127,7 +133,7 @@ func HasIndex(it *pattern.Pattern) bool {
 	// 没有任何规则的 pattern，生成 hash index 用于全匹配
 	return it.RegMatch == nil &&
 		// ProtoMatch 剥离掉协议之后可以做全匹配
-		!it.WildcardMatch && !it.PrefixMatch && !it.SuffixMatch && !it.HTTP
+		!it.WildcardMatch && !it.PrefixMatch && !it.SuffixMatch && !it.HTTP && !it.Custom
 }
 
 func ToIndex(patterns []*pattern.Pattern) []*Index {

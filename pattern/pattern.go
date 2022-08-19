@@ -12,4 +12,5 @@ type Pattern struct {
 	SuffixMatch   bool           `json:"suffix_match"`   // 末尾匹配
 	ProtoMatch    bool           `json:"proto_match"`    // 允许任何协议
 	HTTP          bool           `json:"http"`           // 是否是 HTTP
+	Custom        bool           `json:"custom"`         // 是否是自定义规则
 }
