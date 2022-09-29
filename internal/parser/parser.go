@@ -83,29 +83,29 @@ func ToPatterns(reader io.Reader) []*pattern.Pattern {
 
 		if strings.HasPrefix(it, `||`) {
 			p.ProtoMatch = true
-			it = strings.TrimLeft(it, "||")
+			it = strings.TrimPrefix(it, "||")
 		}
 
 		// 自定义规则
 		if strings.HasPrefix(it, `++`) {
 			p.Custom = true
-			it = strings.TrimLeft(it, "++")
+			it = strings.TrimPrefix(it, "++")
 		}
 
 		if !p.ProtoMatch && strings.HasPrefix(it, `|`) {
 			p.PrefixMatch = true
-			it = strings.TrimLeft(it, "|")
+			it = strings.TrimPrefix(it, "|")
 		}
 
 		if strings.HasSuffix(it, "|") {
 			p.SuffixMatch = true
-			it = strings.TrimRight(it, "|")
+			it = strings.TrimSuffix(it, "|")
 		}
 
 		if strings.HasPrefix(it, `http://`) {
 			p.HTTP = true
 
-			it = strings.TrimLeft(it, "http://")
+			it = strings.TrimPrefix(it, "http://")
 			if unescape, err := url.QueryUnescape(it); err == nil {
 				it = unescape
 			}
@@ -113,7 +113,7 @@ func ToPatterns(reader io.Reader) []*pattern.Pattern {
 
 		// 去掉HTTPS头
 		if strings.HasPrefix(it, `https://`) {
-			it = strings.TrimLeft(it, "https://")
+			it = strings.TrimPrefix(it, "https://")
 		}
 
 		// 忽略同名
